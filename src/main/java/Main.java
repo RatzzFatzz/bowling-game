@@ -12,6 +12,11 @@ public class Main {
 
         while (!gameHandler.isGameComplete()) {
             System.out.print("How many pins did you tip over? ");
+            if (!scanner.hasNextInt()) {
+                System.out.println("Only numbers between 0 and 10 are allowed");
+                scanner.next();
+                continue;
+            }
             if (!gameHandler.addRoll(scanner.nextInt())) {
                 System.out.println("I see what you are trying. You can't cheat me. How many pins did you actually hit?");
                 continue;
