@@ -112,7 +112,7 @@ public class GameHandler {
 
     private void addTo(String[] rolls, int index, List<Integer> rollsInt, String placeholder) {
         for (int i = 0; i < rollsInt.size(); i++) {
-            rolls[i + index] = String.valueOf(rollsInt.get(i));
+            rolls[i + index] = rollsInt.get(i) == 10 ? "X" : String.valueOf(rollsInt.get(i));
         }
         if (placeholder != null) rolls[index + rollsInt.size()] = placeholder;
     }
