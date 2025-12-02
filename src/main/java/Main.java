@@ -1,4 +1,5 @@
 import service.GameHandler;
+import service.PrintService;
 
 import java.util.Scanner;
 
@@ -21,7 +22,7 @@ public class Main {
                 System.out.println("I see what you are trying. You can't cheat me. How many pins did you actually hit?");
                 continue;
             }
-            gameHandler.printScore();
+            PrintService.printScoreboard(gameHandler.getFirst());
         }
 
         System.out.println("Final game score: " + gameHandler.getGameScore());

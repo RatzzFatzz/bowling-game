@@ -3,41 +3,71 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class RoundScore {
-    @Getter
+@Getter
+public class RoundScore {
     @Setter
     private RoundScore next;
 
-    @Getter
-    protected final List<Integer> rolls;
+    protected final int[] rolls;
+    protected int rollCount = 0;
+    protected boolean strike = false;
+    protected boolean spare = false;
 
     public RoundScore(int maxRolls) {
-        rolls = new ArrayList<>(maxRolls);
+        rolls = new int[maxRolls];
     }
 
-    public abstract void addRoll(int roll);
-
-    public abstract int getScore();
-
-    protected int getRollSum() {
-        return rolls.stream().mapToInt(Integer::intValue).sum();
+    public void addRoll(int roll) {
+        rolls[rollCount++] = roll;
+        if (roll == 10) strike = true;
+        else if (rolls.length == 2 && getRollSum() == 10) spare = true;
     }
 
-    protected int getBonusScoreRecursive(int depth) {
+    public int getGameScore() {
+        if (next == null) {
+            return getScore();
+        }
+        return getScore() + next.getGameScore();
+    }
+
+    public int getScore() {
         int result = 0;
 
-        if (rolls.size() >= depth) {
+        result += getRollSum();
+        if (strike) result += getBonusScore(2);
+        else if (spare) result += getBonusScore(1);
+
+        return result;
+    }
+
+    private int getRollSum() {
+        int rollSum = 0;
+        for (int roll : rolls) {
+            rollSum += roll;
+        }
+        return rollSum;
+    }
+
+    private int getBonusScore(int depth) {
+        return getNext() != null ? getNext().getBonusScoreRecursive(depth) : 0;
+    }
+
+    private int getBonusScoreRecursive(int depth) {
+        int result = 0;
+
+        if (rollCount >= depth) {
             for (int i = 0; i < depth; i++) {
-                result += rolls.get(i);
+                result += rolls[i];
             }
-        } else if (rolls.size() == 1) {
-            result += rolls.getFirst();
+        } else if (rollCount == 1) {
+            result += rolls[0];
             if (getNext() != null) result += getNext().getBonusScoreRecursive(depth - 1);
         }
 
         return result;
+    }
+
+    public boolean hasNext() {
+        return next != null;
     }
 }
