@@ -14,9 +14,11 @@ public class Main {
             System.out.print("How many pins did you tip over? ");
             if (!gameHandler.addRoll(scanner.nextInt())) {
                 System.out.println("I see what you are trying. You can't cheat me. How many pins did you actually hit?");
+                continue;
             }
+            gameHandler.printScore();
         }
 
-        System.out.println("Gamescore: " + gameHandler.getGameScore());
+        System.out.println("Final game score: " + gameHandler.getGameScore());
     }
 }

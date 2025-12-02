@@ -11,6 +11,7 @@ public abstract class RoundScore {
     @Setter
     private RoundScore next;
 
+    @Getter
     protected final List<Integer> rolls;
 
     public RoundScore(int maxRolls) {

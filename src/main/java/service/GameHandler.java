@@ -5,6 +5,7 @@ import model.ThreeRollRoundScore;
 import model.TwoRollRoundScore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameHandler {
@@ -66,5 +67,53 @@ public class GameHandler {
 
     public boolean isGameComplete() {
         return round == 10 && ((rollCount == 2 && currentScore < 10) || rollCount == 3);
+    }
+
+    public void printScore() {
+
+        String scoreTable = """
+            +---------------------------------------------------------------------------------------------+
+            |  FRAME |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |     10     |
+            +--------+-------+-------+-------+-------+-------+-------+-------+-------+-------+------------+
+            | ROLLS  | [%s][%s]| [%s][%s]| [%s][%s]| [%s][%s]| [%s][%s]| [%s][%s]| [%s][%s]| [%s][%s]| [%s][%s]| [%s][%s][%s]  |
+            +--------+-------+-------+-------+-------+-------+-------+-------+-------+-------+------------+
+            | SCORE  |  %3s  |  %3s  |  %3s  |  %3s  |  %3s  |  %3s  |  %3s  |  %3s  |  %3s  |    %3s     |
+            +--------+-------+-------+-------+-------+-------+-------+-------+-------+-------+------------+
+            """;
+
+        String[] rolls = new String[21];
+        Integer[] scores = new Integer[10];
+        Arrays.fill(rolls, " ");
+        Arrays.fill(scores, null);
+
+        RoundScore it = first;
+        int frame = 0;
+        do {
+            if (frame < 9 && it.getRolls().size() == 2 || frame == 9 && it.getRolls().size() == 3) {
+                addTo(rolls, frame * 2, it.getRolls(), null);
+            } else {
+                addTo(rolls, frame * 2, it.getRolls(), " ");
+            }
+
+            if (frame > 0) scores[frame] = scores[frame - 1] + it.getScore();
+            else scores[frame] = it.getScore();
+
+            it = it.getNext();
+            frame++;
+        } while (it != null);
+
+        List<String> values = new ArrayList<>(List.of(rolls));
+        List<String> convertedScores = Arrays.stream(scores).map(score -> score == null ? " " : String.valueOf(score)).toList();
+        values.addAll(convertedScores);
+
+        scoreTable = scoreTable.formatted(values.toArray());
+        System.out.println(scoreTable);
+    }
+
+    private void addTo(String[] rolls, int index, List<Integer> rollsInt, String placeholder) {
+        for (int i = 0; i < rollsInt.size(); i++) {
+            rolls[i + index] = String.valueOf(rollsInt.get(i));
+        }
+        if (placeholder != null) rolls[index + rollsInt.size()] = placeholder;
     }
 }
