@@ -7,8 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameHandlerTest {
 
@@ -76,6 +75,39 @@ public class GameHandlerTest {
         int actualScore = gameHandler.getGameScore();
         assertEquals(expectedScore, actualScore);
         assertEquals(expectedGameIsFinished, gameHandler.isGameComplete());
+    }
+
+    private static Stream<Arguments> rollValues() {
+        return Stream.of(
+                Arguments.of(a(-1), false),
+                Arguments.of(a(-2), false),
+                Arguments.of(a(11), false),
+                Arguments.of(a(100), false),
+                Arguments.of(a(5, 6), false),
+                Arguments.of(a(9, 2), false),
+                Arguments.of(a(9, 10), false),
+                Arguments.of(a(10, 10, 10, 10, 10, 10, 10, 10, 10, 6, 6), false),
+                Arguments.of(a(10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 2), false),
+                Arguments.of(a(0), true),
+                Arguments.of(a(5), true),
+                Arguments.of(a(5, 5), true),
+                Arguments.of(a(10), true)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("rollValues")
+    void addRoll(int[] rolls, boolean expectedValid) {
+        GameHandler gameHandler = new GameHandler();
+        Boolean actualValid = null;
+
+        for (int roll: rolls) {
+           actualValid = gameHandler.addRoll(roll);
+        }
+
+        assertNotNull(actualValid);
+        assertEquals(expectedValid, actualValid);
+
     }
 
     private static int[] a(int... vals) {

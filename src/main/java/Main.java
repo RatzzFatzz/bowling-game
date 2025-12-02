@@ -12,8 +12,7 @@ public class Main {
 
         while (!gameHandler.isGameComplete()) {
             System.out.print("How many pins did you tip over? ");
-            int pins = scanner.nextInt();
-            if (pins > 10 || pins < 0 || !gameHandler.addRoll(pins)) {
+            if (!gameHandler.addRoll(scanner.nextInt())) {
                 System.out.println("I see what you are trying. You can't cheat me. How many pins did you actually hit?");
             }
         }

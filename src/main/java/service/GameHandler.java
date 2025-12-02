@@ -4,6 +4,9 @@ import model.RoundScore;
 import model.ThreeRollRoundScore;
 import model.TwoRollRoundScore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameHandler {
     private final RoundScore first = new TwoRollRoundScore();
     private RoundScore current = first;
@@ -32,7 +35,7 @@ public class GameHandler {
      * @return true if roll is valid, else false
      */
     public boolean addRoll(int roll) {
-        if (roll > 10) return false;
+        if (roll > 10 || roll < 0) return false;
 
         if (current instanceof TwoRollRoundScore) {
             if (currentScore + roll > 10) return false;
