@@ -3,23 +3,12 @@
 name: Release Build
 
 on:
-  push:
-    tags:
-      - 'v*'
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  GITHUB_TOKEN: ${{ github.token }}
+  release:
+    types: [created]
 
 jobs:
-  build-and-push-image:
+  build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      packages: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
