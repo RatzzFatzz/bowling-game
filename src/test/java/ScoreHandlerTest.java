@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ScoreHandlerTest {
 
@@ -21,7 +22,7 @@ public class ScoreHandlerTest {
                 // spare after strike
                 Arguments.of(List.of(a(10), a(1, 9), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1)), 47),
                 // strike after strike
-                Arguments.of(List.of(a(10), a(10), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1)), 48),
+                Arguments.of(List.of(a(10), a(10), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1)), 49),
                 // three striker in a row
                 Arguments.of(List.of(a(10), a(10), a(10), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1)), 77),
                 // spare in last round
@@ -30,7 +31,6 @@ public class ScoreHandlerTest {
                 Arguments.of(List.of(a(1, 1), a(1, 1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1, 9, 10)), 38),
                 // triple strike last round
                 Arguments.of(List.of(a(1, 1), a(1, 1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(1,1), a(10, 10, 10)), 48)
-
         );
     }
 
@@ -38,6 +38,12 @@ public class ScoreHandlerTest {
     @MethodSource("rolls")
     void getGameScore(List<int[]> input, int expectedScore) {
         ScoreHandler scoreHandler = new ScoreHandler();
+        for (int[] round: input) {
+            for (int roll: round) {
+                boolean valid = scoreHandler.addRoll(roll);
+                assertTrue(valid, "Adding roll was invalid");
+            }
+        }
         int actualScore = scoreHandler.getGameScore();
         assertEquals(expectedScore, actualScore);
     }
